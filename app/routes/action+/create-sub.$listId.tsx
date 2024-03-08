@@ -1,8 +1,6 @@
 import { parseWithZod } from '@conform-to/zod'
 import { invariantResponse } from '@epic-web/invariant'
-import {
-	type ActionFunctionArgs,
-	type HeadersFunction, json } from '@remix-run/node'
+import { type ActionFunctionArgs, json, type LoaderFunctionArgs } from '@remix-run/node'
 import { nanoid } from 'nanoid'
 import { z } from 'zod'
 import { prisma } from '#app/utils/db.server'
@@ -13,24 +11,16 @@ export const EmailSchema = z.object({
 	email: z.string().email('Invalid email'),
 })
 
-export const headers: HeadersFunction = () => ({
-	'Access-Control-Allow-Origin': '*',
-	'Access-Control-Allow-Methods': 'POST',
-	'Access-Control-Allow-Headers':
-		'Content-Type, Authorization, X-Requested-With',
-	'Access-Control-Allow-Credentials': 'true',
-})
-
-// export async function loader({ request }: LoaderFunctionArgs) {
-// 	return json(
-// 		{ request },
-// 		{
-// 			headers: {
-// 				"Access-Control-Allow-Origin": "*",
-// 			},
-// 		}
-// 	)
-// }
+export async function loader({ request }: LoaderFunctionArgs) {
+	return json(
+		{ request },
+		{
+			headers: {
+				"Access-Control-Allow-Origin": "*",
+			},
+		}
+	)
+}
 
 export async function action({ params, request }: ActionFunctionArgs) {
 	const { listId } = params
