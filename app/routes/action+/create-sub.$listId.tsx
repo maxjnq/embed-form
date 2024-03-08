@@ -1,14 +1,14 @@
 import { parseWithZod } from '@conform-to/zod'
 import { invariantResponse } from '@epic-web/invariant'
 import {
-	json,
 	type ActionFunctionArgs,
 	type HeadersFunction,
-} from '@remix-run/node'
+ type LoaderFunctionArgs, json } from '@remix-run/node'
 import { nanoid } from 'nanoid'
 import { z } from 'zod'
 import { prisma } from '#app/utils/db.server'
 import { checkHoneypot } from '#app/utils/honeypot.server'
+
 
 export const EmailSchema = z.object({
 	email: z.string().email('Invalid email'),
@@ -21,6 +21,17 @@ export const headers: HeadersFunction = () => ({
 		'Content-Type, Authorization, X-Requested-With',
 	'Access-Control-Allow-Credentials': 'true',
 })
+
+// export async function loader({ request }: LoaderFunctionArgs) {
+// 	return json(
+// 		{ request },
+// 		{
+// 			headers: {
+// 				"Access-Control-Allow-Origin": "*",
+// 			},
+// 		}
+// 	)
+// }
 
 export async function action({ params, request }: ActionFunctionArgs) {
 	const { listId } = params
@@ -84,5 +95,11 @@ export async function action({ params, request }: ActionFunctionArgs) {
 		? list.signUpPage?.redirectUrl
 		: `${domain}/me/${sub.shortId}`
 
-	return json({ res: { error: undefined, redirect } })
+	return json({ res: { error: undefined, redirect } }, 		
+		{
+		headers: 
+			{
+				"Access-Control-Allow-Origin": "*",
+			},
+	})
 }
