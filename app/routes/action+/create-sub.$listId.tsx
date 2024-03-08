@@ -2,8 +2,7 @@ import { parseWithZod } from '@conform-to/zod'
 import { invariantResponse } from '@epic-web/invariant'
 import {
 	type ActionFunctionArgs,
-	type HeadersFunction,
- type LoaderFunctionArgs, json } from '@remix-run/node'
+	type HeadersFunction, json } from '@remix-run/node'
 import { nanoid } from 'nanoid'
 import { z } from 'zod'
 import { prisma } from '#app/utils/db.server'
